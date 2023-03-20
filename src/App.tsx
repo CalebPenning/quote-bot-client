@@ -43,6 +43,7 @@ function App() {
 		const res = await fetch(url, {
 			method: "POST",
 			headers,
+			mode: "no-cors",
 			body: JSON.stringify({
 				body: userData.body,
 			}),
