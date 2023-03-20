@@ -86,3 +86,8 @@
 	width: 50%;
 	font-size: 32px;
 }
+
+.toast-success {
+	text-align: center;
+	font-size: 42px;
+}
