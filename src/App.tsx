@@ -1,9 +1,10 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import "./App.css"
 
 function App() {
 	const secretPassphrase = import.meta.env.VITE_SECRET_PASSPHRASE
-	const baseUrl = import.meta.env.VITE_API_BASE_URL
+	const baseUrl = import.meta.env.VITE_BASE_URL
+	console.log(baseUrl)
 
 	const [isAuthorized, setIsAuthorized] = useState(false)
 	const [userData, setUserData] = useState({ passPhrase: "", body: "" })
@@ -20,9 +21,9 @@ function App() {
 		}))
 	}
 
-	const handleSelectFieldChange = (
-		e: React.ChangeEvent<HTMLSelectElement>,
-	) => {}
+	const handleSelectFieldChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+		setApiRoute(e.target.value)
+	}
 
 	const handleLogin = (e: React.FormEvent) => {
 		e.preventDefault()
@@ -47,9 +48,14 @@ function App() {
 			}),
 		})
 
+		console.log(res)
+
 		if (res.status === 201) setIsSuccessfulRequest(true)
 		setIsLoading(false)
 	}
+
+	// add logic to remove successful / error toast every so often
+	// useEffect(() => {})
 
 	return (
 		<div className="App">
@@ -78,12 +84,24 @@ function App() {
 						What would you like to add? A quote to be said by the bot or a
 						keyword to trigger the bot?
 					</p>
-					<select>
+					<select onChange={handleSelectFieldChange}>
 						<option value="/quotes">Quote</option>
 						<option value="/keywords">Keyword</option>
 					</select>
 
-					<form onSubmit={handleSubmit}></form>
+					<form onSubmit={handleSubmit}>
+						<label htmlFor="body-input">
+							Enter {apiRoute.slice(1, apiRoute.length - 1)}
+						</label>
+						<input
+							type="text"
+							placeholder={apiRoute.slice(1, apiRoute.length - 1)}
+							id="body-input"
+							name="body"
+							onChange={handleChange}
+						/>
+						<input type="submit" value="Submit" />
+					</form>
 				</main>
 			)}
 		</div>
