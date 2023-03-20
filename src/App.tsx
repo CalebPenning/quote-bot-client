@@ -63,13 +63,16 @@ function App() {
 				<main id="logged-out-main">
 					<h1>Enter the secret passphrase below:</h1>
 					<form onSubmit={handleLogin}>
-						<label htmlFor="passPhrase">Passphrase</label>
+						<label htmlFor="passPhrase" hidden>
+							Passphrase
+						</label>
 						<input
 							onChange={handleChange}
 							type="text"
 							name="passPhrase"
 							id="passPhrase"
 							value={userData.passPhrase}
+							placeholder="passphrase"
 						/>
 						<input type="submit" value="Submit" />
 					</form>
@@ -80,10 +83,8 @@ function App() {
 						<div className="toast-success">success</div>
 					) : null}
 
-					<p>
-						What would you like to add? A quote to be said by the bot or a
-						keyword to trigger the bot?
-					</p>
+					<p>What would you like to add?</p>
+					<p> A quote to be said by the bot or a keyword to trigger the bot?</p>
 					<select onChange={handleSelectFieldChange}>
 						<option value="/quotes">Quote</option>
 						<option value="/keywords">Keyword</option>
