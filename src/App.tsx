@@ -5,7 +5,6 @@ import axios from "axios"
 function App() {
 	const secretPassphrase = import.meta.env.VITE_SECRET_PASSPHRASE
 	const baseUrl = import.meta.env.VITE_BASE_URL
-	console.log(baseUrl)
 
 	const [isAuthorized, setIsAuthorized] = useState(false)
 	const [userData, setUserData] = useState({ passPhrase: "", body: "" })
@@ -39,9 +38,7 @@ function App() {
 		const url = `${baseUrl}${apiRoute}`
 
 		const res = await axios.post(url, {
-			body: {
-				body: userData.body,
-			},
+			body: userData.body,
 		})
 
 		console.log(res)
@@ -51,7 +48,19 @@ function App() {
 	}
 
 	// add logic to remove successful / error toast every so often
-	// useEffect(() => {})
+	useEffect(() => {
+		const removeToast = () => {
+			setTimeout(() => {
+				const toastElement = document.querySelector(".toast-success")
+				if (toastElement) {
+					document.removeChild(toastElement)
+					setIsSuccessfulRequest(false)
+				}
+				return
+			}, 5000)
+		}
+		removeToast()
+	}, [isSuccessfulRequest])
 
 	return (
 		<div className="App">
