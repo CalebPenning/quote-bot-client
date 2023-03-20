@@ -36,13 +36,9 @@ function App() {
 		e.preventDefault()
 		setIsLoading(true)
 		const url = `${baseUrl}${apiRoute}`
-
 		const res = await axios.post(url, {
 			body: userData.body,
 		})
-
-		console.log(res)
-
 		if (res.status === 201) setIsSuccessfulRequest(true)
 		setIsLoading(false)
 	}
@@ -53,7 +49,6 @@ function App() {
 			setTimeout(() => {
 				const toastElement = document.querySelector(".toast-success")
 				if (toastElement) {
-					document.removeChild(toastElement)
 					setIsSuccessfulRequest(false)
 				}
 				return
