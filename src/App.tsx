@@ -1,14 +1,93 @@
-import { useState } from 'react'
-import './App.css'
+import { useState } from "react"
+import "./App.css"
 
 function App() {
-  const [count, setCount] = useState(0)
+	const secretPassphrase = import.meta.env.VITE_SECRET_PASSPHRASE
+	const baseUrl = import.meta.env.VITE_API_BASE_URL
 
-  return (
-    <div className="App">
-      
-    </div>
-  )
+	const [isAuthorized, setIsAuthorized] = useState(false)
+	const [userData, setUserData] = useState({ passPhrase: "", body: "" })
+	const [apiRoute, setApiRoute] = useState("/quotes")
+	const [isLoading, setIsLoading] = useState(false)
+	const [isSuccessfulRequest, setIsSuccessfulRequest] = useState(false)
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		e.preventDefault()
+		const { name, value } = e.target
+		setUserData((currentData) => ({
+			...currentData,
+			[name]: value,
+		}))
+	}
+
+	const handleSelectFieldChange = (
+		e: React.ChangeEvent<HTMLSelectElement>,
+	) => {}
+
+	const handleLogin = (e: React.FormEvent) => {
+		e.preventDefault()
+		return userData.passPhrase === secretPassphrase
+			? setIsAuthorized(true)
+			: null
+	}
+
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault()
+		setIsLoading(true)
+		const url = new URL(baseUrl)
+		url.pathname = apiRoute
+		const headers = new Headers()
+		headers.set("x-has-passphrase", "true")
+
+		const res = await fetch(url, {
+			method: "POST",
+			headers,
+			body: JSON.stringify({
+				body: userData.body,
+			}),
+		})
+
+		if (res.status === 201) setIsSuccessfulRequest(true)
+		setIsLoading(false)
+	}
+
+	return (
+		<div className="App">
+			{!isAuthorized ? (
+				<main id="logged-out-main">
+					<h1>Enter the secret passphrase below:</h1>
+					<form onSubmit={handleLogin}>
+						<label htmlFor="passPhrase">Passphrase</label>
+						<input
+							onChange={handleChange}
+							type="text"
+							name="passPhrase"
+							id="passPhrase"
+							value={userData.passPhrase}
+						/>
+						<input type="submit" value="Submit" />
+					</form>
+				</main>
+			) : (
+				<main id="logged-in-main">
+					{isSuccessfulRequest ? (
+						<div className="toast-success">success</div>
+					) : null}
+
+					<p>
+						What would you like to add? A quote to be said by the bot or a
+						keyword to trigger the bot?
+					</p>
+					<select>
+						<option value="/quotes">Quote</option>
+						<option value="/keywords">Keyword</option>
+					</select>
+
+					<form onSubmit={handleSubmit}></form>
+				</main>
+			)}
+		</div>
+	)
 }
 
 export default App
