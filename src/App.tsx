@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import "./App.css"
+import axios from "axios"
 
 function App() {
 	const secretPassphrase = import.meta.env.VITE_SECRET_PASSPHRASE
@@ -35,18 +36,12 @@ function App() {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 		setIsLoading(true)
-		const url = new URL(baseUrl)
-		url.pathname = apiRoute
-		const headers = new Headers()
-		headers.set("x-has-passphrase", "true")
+		const url = `${baseUrl}${apiRoute}`
 
-		const res = await fetch(url, {
-			method: "POST",
-			headers,
-			mode: "no-cors",
-			body: JSON.stringify({
+		const res = await axios.post(url, {
+			body: {
 				body: userData.body,
-			}),
+			},
 		})
 
 		console.log(res)
