@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import "./App.css"
 import axios from "axios"
+import SuccessToast from "./components/success-toast"
 
 function App() {
 	const secretPassphrase = import.meta.env.VITE_SECRET_PASSPHRASE
@@ -8,7 +9,7 @@ function App() {
 
 	const [isAuthorized, setIsAuthorized] = useState(false)
 	const [userData, setUserData] = useState({ passPhrase: "", body: "" })
-	const [apiRoute, setApiRoute] = useState("/quotes")
+	const [apiRoute, setApiRoute] = useState("quotes")
 	const [isLoading, setIsLoading] = useState(false)
 	const [isSuccessfulRequest, setIsSuccessfulRequest] = useState(false)
 
@@ -35,7 +36,7 @@ function App() {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 		setIsLoading(true)
-		const url = `${baseUrl}${apiRoute}`
+		const url = `${baseUrl}/${apiRoute}`
 		const res = await axios.post(url, {
 			body: userData.body,
 		})
@@ -79,24 +80,22 @@ function App() {
 				</main>
 			) : (
 				<main id="logged-in-main">
-					{isSuccessfulRequest ? (
-						<div className="toast-success">success</div>
-					) : null}
+					{isSuccessfulRequest ? <SuccessToast /> : null}
 
 					<p>What would you like to add?</p>
 					<p> A quote to be said by the bot or a keyword to trigger the bot?</p>
 					<select onChange={handleSelectFieldChange}>
-						<option value="/quotes">Quote</option>
-						<option value="/keywords">Keyword</option>
+						<option value="quotes">Quote</option>
+						<option value="keywords">Keyword</option>
 					</select>
 
 					<form onSubmit={handleSubmit}>
 						<label htmlFor="body-input">
-							Enter {apiRoute.slice(1, apiRoute.length - 1)}
+							Enter {apiRoute.substring(0, apiRoute.length - 1)}
 						</label>
 						<input
 							type="text"
-							placeholder={apiRoute.slice(1, apiRoute.length - 1)}
+							placeholder={apiRoute.substring(0, apiRoute.length - 1)}
 							id="body-input"
 							name="body"
 							onChange={handleChange}
