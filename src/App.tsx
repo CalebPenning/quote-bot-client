@@ -53,7 +53,7 @@ function App() {
 					setIsSuccessfulRequest(false)
 				}
 				return
-			}, 5000)
+			}, 2500)
 		}
 		removeToast()
 	}, [isSuccessfulRequest])
