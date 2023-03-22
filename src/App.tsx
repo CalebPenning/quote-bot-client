@@ -2,9 +2,9 @@ import { useEffect, useState } from "react"
 import "./App.css"
 import axios from "axios"
 import SuccessToast from "./components/success-toast"
+import EntranceForm from "./components/entrance-form"
 
 function App() {
-	const secretPassphrase = import.meta.env.VITE_SECRET_PASSPHRASE
 	const baseUrl = import.meta.env.VITE_BASE_URL
 
 	const [isAuthorized, setIsAuthorized] = useState(false)
@@ -24,13 +24,6 @@ function App() {
 
 	const handleSelectFieldChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 		setApiRoute(e.target.value)
-	}
-
-	const handleLogin = (e: React.FormEvent) => {
-		e.preventDefault()
-		return userData.passPhrase === secretPassphrase
-			? setIsAuthorized(true)
-			: null
 	}
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -53,7 +46,7 @@ function App() {
 					setIsSuccessfulRequest(false)
 				}
 				return
-			}, 2500)
+			}, 1500)
 		}
 		removeToast()
 	}, [isSuccessfulRequest])
@@ -61,23 +54,11 @@ function App() {
 	return (
 		<div className="App">
 			{!isAuthorized ? (
-				<main id="logged-out-main">
-					<h1>Enter the secret passphrase below:</h1>
-					<form onSubmit={handleLogin}>
-						<label htmlFor="passPhrase" hidden>
-							Passphrase
-						</label>
-						<input
-							onChange={handleChange}
-							type="text"
-							name="passPhrase"
-							id="passPhrase"
-							value={userData.passPhrase}
-							placeholder="passphrase"
-						/>
-						<input type="submit" value="Submit" />
-					</form>
-				</main>
+				<EntranceForm
+					setUserData={setUserData}
+					userData={userData}
+					setIsAuthorized={setIsAuthorized}
+				/>
 			) : (
 				<main id="logged-in-main">
 					{isSuccessfulRequest ? <SuccessToast /> : null}
