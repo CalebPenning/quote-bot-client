@@ -13,7 +13,7 @@ type Props = {
 }
 
 const EntranceForm = ({ setIsAuthorized, userData, setUserData }: Props) => {
-	const secretPassphrase = process.env.VITE_SECRET_PASSPHRASE
+	const secretPassphrase = import.meta.env.VITE_SECRET_PASSPHRASE
 
 	const handleLogin = (e: React.FormEvent) => {
 		e.preventDefault()
